@@ -1,6 +1,7 @@
 <?php
 
-use App\Enums\UserStatus;
+use App\Models\Librarian;
+use App\Models\Loan;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,12 +15,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('returns', function (Blueprint $table) {
             $table->id();
-            $table->string('username')->unique();
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->boolean('is_active')->default(UserStatus::Active);
+            $table->foreignIdFor(Loan::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Librarian::class)->constrained()->cascadeOnDelete();
+            $table->date('in_date');
+            $table->double('fine_amount')->default(0);
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('returns');
     }
 };
