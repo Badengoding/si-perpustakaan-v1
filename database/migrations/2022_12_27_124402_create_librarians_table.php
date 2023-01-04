@@ -1,6 +1,7 @@
 <?php
 
-use App\Enums\UserStatus;
+use App\Models\Position;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,12 +15,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('librarians', function (Blueprint $table) {
             $table->id();
-            $table->string('username')->unique();
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->boolean('is_active')->default(UserStatus::Active);
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
+            $table->string('name');
+            $table->string('phone_number');
+            $table->foreignIdFor(Position::class)->constrained()->cascadeOnDelete();
+            $table->text('address');
             $table->timestamps();
         });
     }
@@ -31,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('librarians');
     }
 };
